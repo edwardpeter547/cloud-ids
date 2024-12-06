@@ -33,7 +33,7 @@
             button5 = new Button();
             button4 = new Button();
             button3 = new Button();
-            button2 = new Button();
+            btnupload = new Button();
             button1 = new Button();
             listBox1 = new ListBox();
             lblogs = new ListBox();
@@ -70,7 +70,7 @@
             panel1.Controls.Add(button5);
             panel1.Controls.Add(button4);
             panel1.Controls.Add(button3);
-            panel1.Controls.Add(button2);
+            panel1.Controls.Add(btnupload);
             panel1.Controls.Add(button1);
             panel1.Location = new Point(46, 98);
             panel1.Name = "panel1";
@@ -117,15 +117,16 @@
             button3.Text = "Download File";
             button3.UseVisualStyleBackColor = false;
             // 
-            // button2
+            // btnupload
             // 
-            button2.BackColor = SystemColors.ButtonFace;
-            button2.Location = new Point(366, 24);
-            button2.Name = "button2";
-            button2.Size = new Size(301, 87);
-            button2.TabIndex = 3;
-            button2.Text = "Upload File";
-            button2.UseVisualStyleBackColor = false;
+            btnupload.BackColor = SystemColors.ButtonFace;
+            btnupload.Location = new Point(366, 24);
+            btnupload.Name = "btnupload";
+            btnupload.Size = new Size(301, 87);
+            btnupload.TabIndex = 3;
+            btnupload.Text = "Upload File";
+            btnupload.UseVisualStyleBackColor = false;
+            btnupload.Click += btnupload_Click;
             // 
             // button1
             // 
@@ -375,7 +376,7 @@
         #endregion
         private Panel panel1;
         private Button button1;
-        private Button button2;
+        private Button btnupload;
         private Button button3;
         private Button button5;
         private Button button4;

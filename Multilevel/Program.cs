@@ -21,7 +21,7 @@ namespace Multilevel
             }*/
 
             ApplicationConfiguration.Initialize();
-            Application.Run(new UploadFile());
+            Application.Run(new Dashboard());
         }
     }
 }

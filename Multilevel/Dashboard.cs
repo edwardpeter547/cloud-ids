@@ -93,5 +93,11 @@ namespace Multilevel
             var cloud = new newcloud();
             cloud.ShowDialog();
         }
+
+        private void btnupload_Click(object sender, EventArgs e)
+        {
+            UploadFile upload = new UploadFile();
+            upload.ShowDialog();
+        }
     }
 }
