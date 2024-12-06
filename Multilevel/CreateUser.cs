@@ -24,7 +24,7 @@ namespace Multilevel
             {
                 if (!(Library.validate_email_address(email_address)))
                 {
-                    MessageBox.Show($"{email_address} is not a valid email address.", "Invalid Email Address", MessageBoxButtons.RetryCancel);
+                    Library.write_message($"{email_address} is not a valid email address.", "Invalid Email Address","ERROR");
                     return;
                 }
             }
@@ -33,9 +33,9 @@ namespace Multilevel
                 return;
             }
 
-            if (password_field != confirm_password)
+            if (!Library.is_matching(password_field,confirm_password))
             {
-                MessageBox.Show("Passwords do not match!", "Password Mismatch", MessageBoxButtons.RetryCancel);
+                Library.write_message("Passwords do not match!", "Password Mismatch", "ERROR");
                 txtconfirmpassword.Clear();
                 txtconfirmpassword.Focus();
                 return;
@@ -47,7 +47,9 @@ namespace Multilevel
             user.Username = txtcloudid.Text;
             user.Passwd = Library.encrypt_password(txtpassword.Text);
             DataAccessLayer.CreateUser(user);
-            MessageBox.Show($"Cloud Account Created for: {user.DisplayName} click Ok to proceed to login", "Account Creation Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            string message = $"Cloud Account Created for: {user.DisplayName} click Ok to proceed to login";
+            string title = "Account Creation Success";
+            Library.write_message(message, title, "SUCCESS");
             Library.reset_fields(this);
             var login = new Login();
             login.Show();

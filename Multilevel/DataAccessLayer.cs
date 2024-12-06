@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.OleDb;
+using System.Reflection;
 using Dapper;
 
 namespace Multilevel
@@ -36,6 +37,42 @@ namespace Multilevel
                 }
                 
             }
+        }
+
+        public static CloudServerModel? GetServer(string ipaddress)
+        {
+            using(var connection = new OleDbConnection(GetConectionString()))
+            {
+                var result = connection.Query<CloudServerModel>("select * from servers where ipaddress=@IpAddress", new {IpAddress = ipaddress }).ToList();
+                if(result.Count > 0 )
+                {
+                    return result.ToList()[0];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public static void AddServer(CloudServerModel server)
+        {
+            using (var connection = new OleDbConnection(GetConectionString()))
+            {
+                connection.Execute(@"insert into servers(servername, port, ipaddress, secret) values(@ServerName, @Port, @IpAddress, @Secret)", GetDynamicParameters(server));
+            }
+        }
+
+        public static DynamicParameters GetDynamicParameters(object instance)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            Type serverType = instance.GetType();
+            foreach (PropertyInfo property in serverType.GetProperties())
+            {
+                if(property.Name != "Id")
+                    parameters.Add(property.Name.ToString(), property.GetValue(instance));
+            }
+            return parameters;
         }
     }
 }

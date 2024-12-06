@@ -36,15 +36,15 @@
             button2 = new Button();
             button1 = new Button();
             listBox1 = new ListBox();
-            listBox2 = new ListBox();
+            lblogs = new ListBox();
             label2 = new Label();
             panel2 = new Panel();
             panel3 = new Panel();
-            button8 = new Button();
-            textBox2 = new TextBox();
+            btnaddcloud = new Button();
+            txtconnectionstatus = new TextBox();
             button7 = new Button();
-            button6 = new Button();
-            textBox1 = new TextBox();
+            btnconnect = new Button();
+            txtipaddress = new TextBox();
             panel4 = new Panel();
             label3 = new Label();
             panel5 = new Panel();
@@ -145,15 +145,15 @@
             listBox1.Size = new Size(581, 548);
             listBox1.TabIndex = 2;
             // 
-            // listBox2
+            // lblogs
             // 
-            listBox2.BackColor = SystemColors.InactiveCaptionText;
-            listBox2.ForeColor = Color.DarkGreen;
-            listBox2.FormattingEnabled = true;
-            listBox2.Location = new Point(46, 522);
-            listBox2.Name = "listBox2";
-            listBox2.Size = new Size(780, 324);
-            listBox2.TabIndex = 9;
+            lblogs.BackColor = SystemColors.InactiveCaptionText;
+            lblogs.ForeColor = Color.DarkGreen;
+            lblogs.FormattingEnabled = true;
+            lblogs.Location = new Point(46, 522);
+            lblogs.Name = "lblogs";
+            lblogs.Size = new Size(780, 324);
+            lblogs.TabIndex = 9;
             // 
             // label2
             // 
@@ -180,67 +180,68 @@
             // 
             panel3.BackColor = SystemColors.GradientActiveCaption;
             panel3.BorderStyle = BorderStyle.FixedSingle;
-            panel3.Controls.Add(button8);
-            panel3.Controls.Add(textBox2);
+            panel3.Controls.Add(btnaddcloud);
+            panel3.Controls.Add(txtconnectionstatus);
             panel3.Controls.Add(button7);
-            panel3.Controls.Add(button6);
-            panel3.Controls.Add(textBox1);
+            panel3.Controls.Add(btnconnect);
+            panel3.Controls.Add(txtipaddress);
             panel3.Location = new Point(46, 302);
             panel3.Name = "panel3";
             panel3.Size = new Size(780, 150);
             panel3.TabIndex = 12;
             // 
-            // button8
+            // btnaddcloud
             // 
-            button8.BackColor = SystemColors.ButtonFace;
-            button8.Location = new Point(437, 75);
-            button8.Name = "button8";
-            button8.Size = new Size(329, 43);
-            button8.TabIndex = 13;
-            button8.Text = "Ping Address";
-            button8.UseVisualStyleBackColor = false;
+            btnaddcloud.BackColor = SystemColors.ButtonFace;
+            btnaddcloud.Location = new Point(22, 75);
+            btnaddcloud.Name = "btnaddcloud";
+            btnaddcloud.Size = new Size(177, 43);
+            btnaddcloud.TabIndex = 14;
+            btnaddcloud.Text = "Add Cloud ";
+            btnaddcloud.UseVisualStyleBackColor = false;
+            btnaddcloud.Click += btnaddcloud_Click;
             // 
-            // textBox2
+            // txtconnectionstatus
             // 
-            textBox2.BackColor = SystemColors.ActiveCaptionText;
-            textBox2.Font = new Font("Segoe UI", 14F);
-            textBox2.ForeColor = Color.Crimson;
-            textBox2.Location = new Point(437, 12);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(329, 57);
-            textBox2.TabIndex = 12;
-            textBox2.Tag = "CONNECTED";
-            textBox2.Text = "DISCONNECTED";
-            textBox2.TextAlign = HorizontalAlignment.Center;
+            txtconnectionstatus.BackColor = SystemColors.ActiveCaptionText;
+            txtconnectionstatus.Font = new Font("Segoe UI", 14F);
+            txtconnectionstatus.ForeColor = Color.Crimson;
+            txtconnectionstatus.Location = new Point(437, 12);
+            txtconnectionstatus.Name = "txtconnectionstatus";
+            txtconnectionstatus.Size = new Size(329, 57);
+            txtconnectionstatus.TabIndex = 12;
+            txtconnectionstatus.Tag = "";
+            txtconnectionstatus.TextAlign = HorizontalAlignment.Center;
             // 
             // button7
             // 
             button7.BackColor = SystemColors.ButtonFace;
-            button7.Location = new Point(246, 75);
+            button7.Location = new Point(437, 75);
             button7.Name = "button7";
-            button7.Size = new Size(185, 43);
+            button7.Size = new Size(329, 43);
             button7.TabIndex = 11;
             button7.Text = "Start Monitor";
             button7.UseVisualStyleBackColor = false;
             // 
-            // button6
+            // btnconnect
             // 
-            button6.BackColor = SystemColors.ButtonFace;
-            button6.Location = new Point(22, 75);
-            button6.Name = "button6";
-            button6.Size = new Size(215, 43);
-            button6.TabIndex = 10;
-            button6.Text = "connect";
-            button6.UseVisualStyleBackColor = false;
+            btnconnect.BackColor = SystemColors.ButtonFace;
+            btnconnect.Location = new Point(205, 75);
+            btnconnect.Name = "btnconnect";
+            btnconnect.Size = new Size(226, 43);
+            btnconnect.TabIndex = 10;
+            btnconnect.Text = "connect";
+            btnconnect.UseVisualStyleBackColor = false;
+            btnconnect.Click += btnconnect_Click;
             // 
-            // textBox1
+            // txtipaddress
             // 
-            textBox1.Font = new Font("Segoe UI", 14F);
-            textBox1.Location = new Point(22, 12);
-            textBox1.Name = "textBox1";
-            textBox1.PlaceholderText = "Ip Address or Domain";
-            textBox1.Size = new Size(409, 57);
-            textBox1.TabIndex = 9;
+            txtipaddress.Font = new Font("Segoe UI", 14F);
+            txtipaddress.Location = new Point(22, 12);
+            txtipaddress.Name = "txtipaddress";
+            txtipaddress.PlaceholderText = "Ip Address or Domain";
+            txtipaddress.Size = new Size(409, 57);
+            txtipaddress.TabIndex = 9;
             // 
             // panel4
             // 
@@ -350,7 +351,7 @@
             Controls.Add(panel4);
             Controls.Add(panel3);
             Controls.Add(panel2);
-            Controls.Add(listBox2);
+            Controls.Add(lblogs);
             Controls.Add(listBox1);
             Controls.Add(panel1);
             Name = "Dashboard";
@@ -379,15 +380,14 @@
         private Button button5;
         private Button button4;
         private ListBox listBox1;
-        private ListBox listBox2;
+        private ListBox lblogs;
         private Label label2;
         private Panel panel2;
         private Panel panel3;
-        private Button button8;
-        private TextBox textBox2;
+        private TextBox txtconnectionstatus;
         private Button button7;
-        private Button button6;
-        private TextBox textBox1;
+        private Button btnconnect;
+        private TextBox txtipaddress;
         private Panel panel4;
         private Label label3;
         private Panel panel5;
@@ -398,5 +398,6 @@
         private Label label5;
         private Button button9;
         private Label lbltest;
+        private Button btnaddcloud;
     }
 }
