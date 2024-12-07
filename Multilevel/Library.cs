@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.OleDb;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.WebSockets;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
+using DotNetEnv;
 using MD5Hash;
 using static System.Reflection.Metadata.BlobBuilder;
 
@@ -162,6 +168,66 @@ namespace Multilevel
         {
             throw new NotImplementedException();
         }
+
+        private static string DbFilename()
+        {
+            string InitialDirectory = Path.GetDirectoryName(path: Assembly.GetExecutingAssembly().Location.ToString());
+            string DbFile = AccessDBSettings.DatabaseName;
+            return InitialDirectory + DbFile;
+        }
+
+        public static void SetApplicationEnvironment()
+        {
+            string ApplicationDirectory = Path.GetDirectoryName(path: Assembly.GetExecutingAssembly().Location.ToString());
+            string env_file = ApplicationDirectory + @"\.env";
+            Env.Load(env_file);
+            //Env.GetString(AccessDBSettings.ApplicationName);
+        }
+
+        public static string SetConnectionString()
+        {
+            OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder();
+            builder.DataSource = DbFilename();
+            builder.Provider = AccessDBSettings.DatabaseProvider;
+            builder.PersistSecurityInfo = false;
+            return builder.ConnectionString;
+        }
+
+        public static void ApplicationSetup()
+        {
+            var connection_string = SetConnectionString();
+            AddOrUpdateAppSettings(AccessDBSettings.DatabaseConfig, connection_string);
+        }
+
+        public static void AddOrUpdateAppSettings(string name, string value)
+        {
+            // Get the current configuration file
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            if(config.ConnectionStrings.ConnectionStrings[name] != null )
+            {
+                config.ConnectionStrings.ConnectionStrings[name].ConnectionString = value;
+            }
+            else
+            {
+                ConnectionStringSettings new_connection = new ConnectionStringSettings(name, value);
+                config.ConnectionStrings.ConnectionStrings.Add(new_connection);
+            }
+
+            try
+            {
+                // Save the changes to the configuration file
+                config.Save(ConfigurationSaveMode.Modified);
+
+                // Refresh the section so that the changes are applied immediately
+                ConfigurationManager.RefreshSection("appSettings");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Unable to Save Configuration Reasons: " + ex.Message.ToString());
+            }
+            
+        }
     }
 
     public static class Status
@@ -189,5 +255,12 @@ namespace Multilevel
     {
         public string FileName { get; set; }
         public string Extension { get; set; }
+    }
+
+    public class AccessDBSettings
+    {
+        public const string DatabaseName = @"\multilevel.accdb";
+        public const string DatabaseProvider = "Microsoft.ACE.OLEDB.12.0";
+        public const string DatabaseConfig = "multilevel";
     }
 }

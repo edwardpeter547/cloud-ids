@@ -21,7 +21,11 @@ namespace Multilevel
             }*/
 
             ApplicationConfiguration.Initialize();
+
+            Library.ApplicationSetup();
+
             Application.Run(new Dashboard());
         }
+
     }
 }

@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Multilevel": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\ProgramData",
+      "remoteDebugEnabled": false
+    }
+  }
+}

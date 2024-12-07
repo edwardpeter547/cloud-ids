@@ -55,6 +55,15 @@ namespace Multilevel
             }
         }
 
+        public static List<CloudServerModel> GetCloudServers()
+        {
+            using(var connection = new OleDbConnection(GetConectionString()))
+            {
+                var result = connection.Query<CloudServerModel>("select * from servers");
+                return result.ToList();
+            }
+        }
+
         public static void AddServer(CloudServerModel server)
         {
             using (var connection = new OleDbConnection(GetConectionString()))
