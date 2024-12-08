@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Multilevel
 {
-    internal class CloudServerModel
+    public class CloudServerModel
     {
         public int Id { get; set; }
         public string ServerName { get; set; }

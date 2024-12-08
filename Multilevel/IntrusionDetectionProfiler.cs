@@ -25,7 +25,7 @@ namespace Multilevel
         }
         static string GenerateRandomTimestamp()
         {
-            DateTime startDate = new DateTime(2020, 1, 1);
+            DateTime startDate = DateTime.Now;
             DateTime endDate = DateTime.Now;
             TimeSpan timeSpan = endDate - startDate;
             DateTime randomDate = startDate.AddMilliseconds(random.NextDouble() * timeSpan.TotalMilliseconds);

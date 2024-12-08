@@ -76,13 +76,28 @@ namespace Multilevel
             return is_valid;
         }
 
-        public static void reset_fields(Form form)
+        public static void reset_fields(Form form, string ignore_field = "")
         {
             foreach (var c in form.Controls)
             {
                 if (c is TextBox)
                 {
-                    ((TextBox)c).Clear();
+                    if (!string.IsNullOrEmpty(ignore_field))
+                    {
+                        if(((TextBox)c).Name == ignore_field)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            ((TextBox)c).Clear();
+                        }
+                    }
+                    else
+                    {
+                        ((TextBox)c).Clear();
+                    }
+
                 }
             }
         }

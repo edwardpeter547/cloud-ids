@@ -31,14 +31,14 @@
             components = new System.ComponentModel.Container();
             panel1 = new Panel();
             button9 = new Button();
-            button4 = new Button();
+            btnviewlogs = new Button();
             button3 = new Button();
             btnupload = new Button();
             button1 = new Button();
-            listBox1 = new ListBox();
             label2 = new Label();
             panel2 = new Panel();
             panel3 = new Panel();
+            btndisconnect = new Button();
             cbIpAddress = new ComboBox();
             btnaddcloud = new Button();
             txtconnectionstatus = new TextBox();
@@ -54,11 +54,13 @@
             tmlog = new System.Windows.Forms.Timer(components);
             rtblogs = new RichTextBox();
             tmmonitor = new System.Windows.Forms.Timer(components);
+            dgfiles = new DataGridView();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             panel4.SuspendLayout();
             panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgfiles).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -66,7 +68,7 @@
             panel1.BackColor = SystemColors.GradientActiveCaption;
             panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(button9);
-            panel1.Controls.Add(button4);
+            panel1.Controls.Add(btnviewlogs);
             panel1.Controls.Add(button3);
             panel1.Controls.Add(btnupload);
             panel1.Controls.Add(button1);
@@ -85,15 +87,16 @@
             button9.Text = "Logout";
             button9.UseVisualStyleBackColor = false;
             // 
-            // button4
+            // btnviewlogs
             // 
-            button4.BackColor = SystemColors.ButtonFace;
-            button4.Location = new Point(678, 24);
-            button4.Name = "button4";
-            button4.Size = new Size(143, 87);
-            button4.TabIndex = 5;
-            button4.Text = "View Logs";
-            button4.UseVisualStyleBackColor = false;
+            btnviewlogs.BackColor = SystemColors.ButtonFace;
+            btnviewlogs.Location = new Point(678, 24);
+            btnviewlogs.Name = "btnviewlogs";
+            btnviewlogs.Size = new Size(143, 87);
+            btnviewlogs.TabIndex = 5;
+            btnviewlogs.Text = "View Logs";
+            btnviewlogs.UseVisualStyleBackColor = false;
+            btnviewlogs.Click += btnviewlogs_Click;
             // 
             // button3
             // 
@@ -108,6 +111,7 @@
             // btnupload
             // 
             btnupload.BackColor = SystemColors.ButtonFace;
+            btnupload.Enabled = false;
             btnupload.Location = new Point(186, 24);
             btnupload.Name = "btnupload";
             btnupload.Size = new Size(141, 87);
@@ -125,14 +129,6 @@
             button1.TabIndex = 2;
             button1.Text = "Profile";
             button1.UseVisualStyleBackColor = false;
-            // 
-            // listBox1
-            // 
-            listBox1.FormattingEnabled = true;
-            listBox1.Location = new Point(865, 141);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(581, 324);
-            listBox1.TabIndex = 2;
             // 
             // label2
             // 
@@ -159,6 +155,7 @@
             // 
             panel3.BackColor = SystemColors.GradientActiveCaption;
             panel3.BorderStyle = BorderStyle.FixedSingle;
+            panel3.Controls.Add(btndisconnect);
             panel3.Controls.Add(cbIpAddress);
             panel3.Controls.Add(btnaddcloud);
             panel3.Controls.Add(txtconnectionstatus);
@@ -168,6 +165,17 @@
             panel3.Name = "panel3";
             panel3.Size = new Size(837, 165);
             panel3.TabIndex = 12;
+            // 
+            // btndisconnect
+            // 
+            btndisconnect.BackColor = SystemColors.ButtonFace;
+            btndisconnect.Location = new Point(351, 75);
+            btndisconnect.Name = "btndisconnect";
+            btndisconnect.Size = new Size(178, 43);
+            btndisconnect.TabIndex = 16;
+            btndisconnect.Text = "Disconnect";
+            btndisconnect.UseVisualStyleBackColor = false;
+            btndisconnect.Click += btndisconnect_Click;
             // 
             // cbIpAddress
             // 
@@ -183,21 +191,24 @@
             btnaddcloud.BackColor = SystemColors.ButtonFace;
             btnaddcloud.Location = new Point(22, 75);
             btnaddcloud.Name = "btnaddcloud";
-            btnaddcloud.Size = new Size(177, 43);
+            btnaddcloud.Size = new Size(146, 43);
             btnaddcloud.TabIndex = 14;
-            btnaddcloud.Text = "Add Cloud ";
+            btnaddcloud.Text = "Add server";
             btnaddcloud.UseVisualStyleBackColor = false;
             btnaddcloud.Click += btnaddcloud_Click;
             // 
             // txtconnectionstatus
             // 
             txtconnectionstatus.BackColor = SystemColors.ActiveCaptionText;
+            txtconnectionstatus.Cursor = Cursors.No;
             txtconnectionstatus.Font = new Font("Segoe UI", 14F);
             txtconnectionstatus.ForeColor = Color.Crimson;
             txtconnectionstatus.Location = new Point(535, 13);
             txtconnectionstatus.Name = "txtconnectionstatus";
+            txtconnectionstatus.ReadOnly = true;
             txtconnectionstatus.Size = new Size(286, 57);
             txtconnectionstatus.TabIndex = 12;
+            txtconnectionstatus.TabStop = false;
             txtconnectionstatus.Tag = "";
             txtconnectionstatus.TextAlign = HorizontalAlignment.Center;
             // 
@@ -215,11 +226,11 @@
             // btnconnect
             // 
             btnconnect.BackColor = SystemColors.ButtonFace;
-            btnconnect.Location = new Point(303, 75);
+            btnconnect.Location = new Point(186, 75);
             btnconnect.Name = "btnconnect";
-            btnconnect.Size = new Size(226, 43);
+            btnconnect.Size = new Size(159, 43);
             btnconnect.TabIndex = 10;
-            btnconnect.Text = "connect";
+            btnconnect.Text = "Connect";
             btnconnect.UseVisualStyleBackColor = false;
             btnconnect.Click += btnconnect_Click;
             // 
@@ -317,19 +328,28 @@
             // 
             tmmonitor.Tick += tmmonitor_Tick;
             // 
+            // dgfiles
+            // 
+            dgfiles.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgfiles.Location = new Point(865, 143);
+            dgfiles.Name = "dgfiles";
+            dgfiles.RowHeadersWidth = 82;
+            dgfiles.Size = new Size(581, 322);
+            dgfiles.TabIndex = 18;
+            // 
             // Dashboard
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ActiveCaption;
             ClientSize = new Size(1457, 807);
+            Controls.Add(dgfiles);
             Controls.Add(rtblogs);
             Controls.Add(lbltest);
             Controls.Add(panel5);
             Controls.Add(panel4);
             Controls.Add(panel3);
             Controls.Add(panel2);
-            Controls.Add(listBox1);
             Controls.Add(panel1);
             Name = "Dashboard";
             Text = "Dashboard";
@@ -343,6 +363,7 @@
             panel4.PerformLayout();
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgfiles).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -352,8 +373,7 @@
         private Button button1;
         private Button btnupload;
         private Button button3;
-        private Button button4;
-        private ListBox listBox1;
+        private Button btnviewlogs;
         private Label label2;
         private Panel panel2;
         private Panel panel3;
@@ -373,5 +393,7 @@
         private System.Windows.Forms.Timer tmlog;
         private RichTextBox rtblogs;
         private System.Windows.Forms.Timer tmmonitor;
+        private Button btndisconnect;
+        private DataGridView dgfiles;
     }
 }

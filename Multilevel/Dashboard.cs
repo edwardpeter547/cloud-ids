@@ -16,16 +16,37 @@ namespace Multilevel
     {
         public string ConnectionStatus { get; set; }
         int unpackingProgress = 0;
-        CloudServerModel? server = null;
+        CloudServerModel? server;
+        bool HasBeenConnected = false;
+        List<FileModel> files;
         public Dashboard()
         {
             InitializeComponent();
             ConnectionStatus = Status.DISCONNECTED;
             GetCloudServers();
             show_connection_status(ConnectionStatus);
-
-            tmlog.Interval = 500;
+            this.server = null;
+            tmlog.Interval = 200;
             tmmonitor.Interval = 300;
+            SetupDataGrid();
+        }
+
+        private void SetupDataGrid()
+        {
+            dgfiles.ColumnCount = 1;
+            dgfiles.Columns[0].Name = "Filename";
+            dgfiles.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        }
+
+        private void GetServerFiles()
+        {
+            files = DataAccessLayer.GetFiles();
+            
+            foreach (var record in files)
+            {
+                string[] row = new string[] {record.FileName};
+                dgfiles.Rows.Add(row);
+            }
         }
 
         private void GetCloudServers()
@@ -49,32 +70,23 @@ namespace Multilevel
 
             if (string.IsNullOrEmpty(ipaddress))
             {
-                Library.write_message("Please Provide Enter IP Address", "Invalid IP Address", MessageStatus.ERROR);
+                Library.write_message("Please select a server to connect to", "Select Server", MessageStatus.ERROR);
                 cbIpAddress.Focus();
                 return;
             }
 
             if (ConnectionStatus == Status.DISCONNECTED)
             {
-                server = DataAccessLayer.GetServer(ipaddress);
-                if (server != null)
+                this.server = DataAccessLayer.GetServer(ipaddress);
+                if (this.server != null)
                 {
+                    ConnectionStatus = Status.CONNECTED;
                     rtblogs.Clear();
                     tmlog.Start();
-                    ConnectionStatus = Status.CONNECTED;
-                    btnconnect.Tag = Status.DISCONNECT;
-                    btnconnect.Text = btnconnect.Tag.ToString();
+                    show_connection_status(ConnectionStatus);
                 }
             }
-            else
-            {
-                ConnectionStatus = Status.DISCONNECTED;
-                btnconnect.Tag = Status.CONNECT;
-                btnconnect.Text = btnconnect.Tag.ToString();
-                cbIpAddress.SelectedIndex = -1;
-                rtblogs.Clear();
-            }
-            show_connection_status(ConnectionStatus);
+
 
         }
 
@@ -84,13 +96,24 @@ namespace Multilevel
             {
                 txtconnectionstatus.ForeColor = Color.LimeGreen;
                 cbIpAddress.Enabled = false;
+                btnconnect.Enabled = false;
+                btndisconnect.Enabled = true;
+                btnupload.Enabled = true;
+                dgfiles.Rows.Clear();
+                GetServerFiles();
             }
             else
             {
                 txtconnectionstatus.ForeColor = Color.Red;
                 cbIpAddress.Enabled = true;
+                btnconnect.Enabled = true;
+                btndisconnect.Enabled = false;
+                cbIpAddress.SelectedIndex = -1;
+                btnmonitor.Enabled = true;
+                btnupload.Enabled = false;
+                tmmonitor.Stop();
+                dgfiles.Rows.Clear();
             }
-
             txtconnectionstatus.Text = connectionStatus;
 
         }
@@ -104,15 +127,22 @@ namespace Multilevel
 
         private void btnupload_Click(object sender, EventArgs e)
         {
-            UploadFile upload = new UploadFile();
+            UploadFile upload = new UploadFile(server: this.server);
+            upload.FileUploaded += Upload_FileUploaded;
             upload.ShowDialog();
+        }
+
+        private void Upload_FileUploaded(object sender, EventArgs e)
+        {
+            dgfiles.Rows.Clear();
+            GetServerFiles();
         }
 
         private void tmlog_Tick(object sender, EventArgs e)
         {
             var fakeLogData = new List<string>
             {
-                $"connected to server {server.ServerName}@{server.IpAddress}",
+                $"connected to server {this.server.ServerName}@{this.server.IpAddress}",
                 "updating IDS Ruleset...",
                 "creating backup on mirrow server...",
                 "configuring iptables on storage server..",
@@ -144,10 +174,13 @@ namespace Multilevel
 
         private void btnmonitor_Click(object sender, EventArgs e)
         {
+
             if (ConnectionStatus == Status.CONNECTED)
             {
                 rtblogs.Clear();
                 tmmonitor.Start();
+                btnmonitor.Enabled = false;
+                HasBeenConnected = true;
             }
         }
 
@@ -156,6 +189,20 @@ namespace Multilevel
             string idslog = IntrusionDetectionProfiler.GenerateRandomIDSLog();
             rtblogs.AppendText(idslog + Environment.NewLine);
             rtblogs.ScrollToCaret(); // Scroll to the latest message
+        }
+
+        private void btndisconnect_Click(object sender, EventArgs e)
+        {
+
+            ConnectionStatus = Status.DISCONNECTED;
+            show_connection_status(ConnectionStatus);
+        }
+
+        private void btnviewlogs_Click(object sender, EventArgs e)
+        {
+
+            ViewLogs logs = new ViewLogs(HasBeenConnected);
+            logs.ShowDialog();
         }
     }
 }

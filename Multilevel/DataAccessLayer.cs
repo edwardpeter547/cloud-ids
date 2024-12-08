@@ -72,6 +72,24 @@ namespace Multilevel
             }
         }
 
+        public static void AddFile(FileModel file)
+        {
+            var parameters = GetDynamicParameters(file);
+            using (var connection = new OleDbConnection(GetConectionString()))
+            {
+                connection.Execute(@"insert into cloudfiles(filename, owner, secret, filecontent, description, server) values(@FileName, @Owner, @Secret, @FileContent, @Description, @Server)", parameters);
+            }
+        }
+
+        public static List<FileModel> GetFiles()
+        {
+            using (var connection = new OleDbConnection(GetConectionString()))
+            {
+                var result = connection.Query<FileModel>("select * from cloudfiles");
+                return result.ToList();
+            }
+        }
+
         public static DynamicParameters GetDynamicParameters(object instance)
         {
             DynamicParameters parameters = new DynamicParameters();
